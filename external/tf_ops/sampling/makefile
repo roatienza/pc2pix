@@ -10,3 +10,7 @@ tf_sampling_g.cu.o:
 
 tf_sampling_so.so: tf_sampling_g.cu.o
 	g++ -std=c++11 tf_sampling.cpp tf_sampling_g.cu.o -o tf_sampling_so.so -shared -fPIC -I $(tensorflow) -I /usr/local/cuda/include -lcudart -L /usr/local/cuda/lib64/ -O2 -D_GLIBCXX_USE_CXX11_ABI=0 -L $(TF_LIB) -ltensorflow_framework
+
+clean:
+	rm *.so
+	rm  *.o 
