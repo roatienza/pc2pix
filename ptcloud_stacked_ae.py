@@ -218,8 +218,8 @@ class PtCloudStackedAE():
     def loss(self, gt, pred):
         from tf_ops.emd import tf_auctionmatch
         from tf_ops.sampling import tf_sampling
-        # from tf_ops.CD import tf_nndistance
-        from structural_losses import tf_nndistance
+        from tf_ops.CD import tf_nndistance
+        # from structural_losses import tf_nndistance
         if self.emd:
             matchl_out, matchr_out = tf_auctionmatch.auction_match(pred, gt)
             matched_out = tf_sampling.gather_point(gt, matchl_out)

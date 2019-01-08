@@ -1,8 +1,7 @@
 '''pc2pix: A conditional generative model for rendering point clouds
 
 Training:
-python3 pc2pix.py --ptcloud_ae_weights=weights/all-pt-cloud-stacked-ae-emd-5-ae-weights-512.h5 
-   -t -p=512 --generator=weights/all-gen-color.h5 --discriminator=weights/all-dis-color.h5
+    python3 pc2pix.py --ptcloud_ae_weights=model_weights/ptcloud/all-pt-cloud-stacked-ae-emd-5-ae-weights-512.h5 -t -p=512 --generator=model_weights/pc2pix/all-gen-color.h5 --discriminator=model_weights/pc2pix/all-dis-color.h5
 
 '''
 
@@ -30,6 +29,7 @@ from general_utils import plot_image, plot_images
 import sys
 import os
 import datetime
+sys.path.append("lib")
 import model
 
 
@@ -58,6 +58,7 @@ class PC2Pix():
         self.discriminator = None
         self.adversarial = None
         os.makedirs(self.model_dir, exist_ok=True) 
+        os.makedirs("weights", exist_ok=True) 
         self.color = color
         self.gen_spectral_normalization = False
 
@@ -399,6 +400,7 @@ if __name__ == '__main__':
         gw = args.generator
 
     ptcloud_ae = PtCloudStackedAE(latent_dim=args.pc_code_dim,
+                                  evaluate=True,
                                   category=args.category)
     ptcloud_ae.stop_sources()
 
