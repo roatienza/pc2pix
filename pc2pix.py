@@ -1,3 +1,12 @@
+'''pc2pix: A conditional generative model for rendering point clouds
+
+Training:
+python3 pc2pix.py --ptcloud_ae_weights=weights/all-pt-cloud-stacked-ae-emd-5-ae-weights-512.h5 
+   -t -p=512 --generator=weights/all-gen-color.h5 --discriminator=weights/all-dis-color.h5
+
+'''
+
+
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
@@ -21,7 +30,6 @@ from general_utils import plot_image, plot_images
 import sys
 import os
 import datetime
-sys.path.append("lib")
 import model
 
 

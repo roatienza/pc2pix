@@ -35,10 +35,6 @@ import sys
 
 sys.path.append("external")
 from general_utils import plot_3d_point_cloud
-# from tf_ops.emd import tf_auctionmatch
-# from tf_ops.sampling import tf_sampling
-# from tf_ops.CD import tf_nndistance
-#from structural_losses import tf_nndistance
 
 from data import DataSource
 from model_utils import save_weights, save_images
