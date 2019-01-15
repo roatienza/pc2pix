@@ -286,7 +286,7 @@ class PC2Pix():
 
             self.discriminator = multi_gpu_model(self.discriminator_single, gpus=self.gpus)
 	
-        loss = ['binary_crossentropy', 'mse', self.elev_loss, self.azim_loss]
+        loss = ['binary_crossentropy', 'mae', self.elev_loss, self.azim_loss]
         loss_weights = [1., 300., 10., 50.]
         self.discriminator.compile(loss=loss,
                                    loss_weights=loss_weights,

@@ -61,13 +61,15 @@ if __name__ == '__main__':
     help_ = "Shapnet category or class (chair, airplane, etc)"
     parser.add_argument("-a", "--category", default='all', help=help_)
     help_ = "Split file"
-    parser.add_argument("-s", "--split_file", default='data/all_exp_norm.json', help=help_)
+    parser.add_argument("-s", "--split_file", default='data/all_exp.json', help=help_)
     help_ = "PLY files folder"
     parser.add_argument("--ply", default=PLY_PATH, help=help_)
     help_ = "pc codes folder"
     parser.add_argument("--pc_codes", default=PC_CODES_PATH, help=help_)
     help_ = "Point cloud code dim"
     parser.add_argument("-p", "--pc_code_dim", default=32, type=int, help=help_)
+    help_ = "Kernel size"
+    parser.add_argument("-k", "--kernel_size", default=1, type=int, help=help_)
     args = parser.parse_args()
 
     batch_size = 32
@@ -75,7 +77,7 @@ if __name__ == '__main__':
     category = args.category
 
     ptcloud_ae = PtCloudStackedAE(latent_dim=pc_code_dim,
-                                  kernel_size=5)
+                                  kernel_size=args.kernel_size)
     ptcloud_ae.stop_sources()
 
     if args.ptcloud_ae_weights:
