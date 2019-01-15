@@ -72,10 +72,10 @@ class PC2Pix():
             # big color
             # items = ['im', 'pc', 'elev', 'azim']
         # items = ['gray', 'pc', 'view']
-        if category == 'all':
-            path = 'all_exp_norm.json'
-        else:
-            path = category + '_exp.json'
+        #if category == 'all':
+        #    path = 'all_exp_norm.json'
+        #else:
+        path = category + '_exp.json'
         self.split_file = os.path.join('data', path)
 
         self.train_source = DataSource(batch_size=self.batch_size, items=items, split_file=self.split_file)
@@ -390,6 +390,8 @@ if __name__ == '__main__':
     parser.add_argument("-c", "--category", default='all', help=help_)
     help_ = "Number of GPUs (default is 1)"
     parser.add_argument("--gpus", type=int, default=1, help=help_)
+    help_ = "PC Stacked kernel size"
+    parser.add_argument("--kernel_size", type=int, default=1, help=help_)
     args = parser.parse_args()
 
     gw = None
@@ -403,6 +405,7 @@ if __name__ == '__main__':
 
     ptcloud_ae = PtCloudStackedAE(latent_dim=args.pc_code_dim,
                                   evaluate=True,
+                                  kernel_size=args.kernel_size,
                                   category=args.category)
     ptcloud_ae.stop_sources()
 
