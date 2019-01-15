@@ -71,10 +71,10 @@ class PtCloudStackedAE():
         self.model_dir = "saved_models"
         os.makedirs(self.model_dir, exist_ok=True) 
         self.category = category
-        if category == 'all':
-            path = 'all_exp_norm.json'
-        else:
-            path = category + '_exp.json'
+        #if category == 'all':
+        #    path = 'all_exp_norm.json'
+        #else:
+        path = category + '_exp.json'
         split_file = os.path.join('data', path)
         print("Using train split file: ", split_file)
 
@@ -218,8 +218,10 @@ class PtCloudStackedAE():
     def loss(self, gt, pred):
         from tf_ops.emd import tf_auctionmatch
         from tf_ops.sampling import tf_sampling
-        from tf_ops.CD import tf_nndistance
-        # from structural_losses import tf_nndistance
+        #from tf_ops.CD import tf_nndistance
+        from structural_losses import tf_nndistance
+        # from structural_losses.tf_approxmatch import approx_match, match_cost
+
         if self.emd:
             matchl_out, matchr_out = tf_auctionmatch.auction_match(pred, gt)
             matched_out = tf_sampling.gather_point(gt, matchl_out)
@@ -227,10 +229,14 @@ class PtCloudStackedAE():
             emd_loss = tf.reduce_mean(emd_loss, axis=1, keepdims=True)
             return emd_loss
         else:
-            p1top2 , _, p2top1, _ = tf_nndistance.nn_distance(gt, pred)
+            #cost_p1_p2, _, cost_p2_p1, _ = nn_distance(self.x_reconstr, self.gt)
+            #self.loss = tf.reduce_mean(cost_p1_p2) + tf.reduce_mean(cost_p2_p1)
+
+            p1top2 , _, p2top1, _ = tf_nndistance.nn_distance(pred, gt)
             #p1top2 is for each element in gt, the cloest distance to this element
-            cd_loss = p1top2 + p2top1
-            cd_loss = K.mean(cd_loss)
+            # cd_loss = p1top2 + p2top1
+            cd_loss = K.mean(p1top2) + K.mean(p2top1)
+            # cd_loss = K.mean(cd_loss)
             return cd_loss
 
 
@@ -253,13 +259,11 @@ class PtCloudStackedAE():
 
 
     def train_ae(self):
-        epochs = 200
-        train_steps = self.train_steps * epochs
         save_interval = 500
         print_interval = 100
         start_time = datetime.datetime.now()
         loss = 0.0
-        epochs = 400
+        epochs = 30
         train_steps = self.train_steps * epochs
 
         for step in range(train_steps):
