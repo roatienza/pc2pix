@@ -223,6 +223,7 @@ class PC2Pix():
                     prefix += "-gray"
                 if self.gen_spectral_normalization:
                     prefix += "-sn"
+                prefix += "-" + str(self.pc_code_dim)
                 fname = os.path.join("weights", prefix + ".h5")
                 self.generator_single.save_weights(fname)
                 prefix = self.category + "-dis"
@@ -232,6 +233,7 @@ class PC2Pix():
                     prefix += "-gray"
                 if self.gen_spectral_normalization:
                     prefix += "-sn"
+                prefix += "-" + str(self.pc_code_dim)
                 fname = os.path.join("weights", prefix + ".h5")
                 self.discriminator_single.save_weights(fname)
 
