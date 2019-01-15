@@ -69,10 +69,11 @@ if __name__ == '__main__':
     parser.add_argument("--data", default=TARGET_PATH, help=help_)
     help_ = "PLY files folder"
     parser.add_argument("--ply", default=PLY_PATH, help=help_)
+    help_ = "Point cloud code dim"
+    parser.add_argument("-p", "--pc_code_dim", type=int, default=32, help=help_)
     args = parser.parse_args()
 
     batch_size = 32
-    pc_code_dim = 32
     gw = None
     dw = None
     gen_pc_codes = False
@@ -85,8 +86,9 @@ if __name__ == '__main__':
     if args.generator:
         gw = args.generator
 
-    ptcloud_ae = PtCloudStackedAE(latent_dim=pc_code_dim,
+    ptcloud_ae = PtCloudStackedAE(latent_dim=args.pc_code_dim,
                                   category=args.category,
+                                  evaluate=True,
                                   kernel_size=5)
     ptcloud_ae.stop_sources()
 
@@ -98,7 +100,7 @@ if __name__ == '__main__':
         print("Trained point cloud ae required to pc2pix")
         exit(0)
 
-    pc2pix = PC2Pix(ptcloud_ae=ptcloud_ae, gw=gw, dw=dw, batch_size=batch_size, color=color, category=args.category)
+    pc2pix = PC2Pix(ptcloud_ae=ptcloud_ae, gw=gw, dw=dw, pc_code_dim=args.pc_code_dim, batch_size=batch_size, color=color, category=args.category)
 
     split_file = args.split_file
     js = get_ply(split_file)
