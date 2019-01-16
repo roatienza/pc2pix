@@ -72,10 +72,10 @@ class PC2Pix():
             # big color
             # items = ['im', 'pc', 'elev', 'azim']
         # items = ['gray', 'pc', 'view']
-        if category == 'all':
-            path = 'all_exp_norm.json'
-        else:
-            path = category + '_exp.json'
+        #if category == 'all':
+        #    path = 'all_exp_norm.json'
+        #else:
+        path = category + '_exp.json'
         self.split_file = os.path.join('data', path)
 
         self.train_source = DataSource(batch_size=self.batch_size, items=items, split_file=self.split_file)
@@ -223,6 +223,7 @@ class PC2Pix():
                     prefix += "-gray"
                 if self.gen_spectral_normalization:
                     prefix += "-sn"
+                prefix += "-" + str(self.pc_code_dim)
                 fname = os.path.join("weights", prefix + ".h5")
                 self.generator_single.save_weights(fname)
                 prefix = self.category + "-dis"
@@ -232,6 +233,7 @@ class PC2Pix():
                     prefix += "-gray"
                 if self.gen_spectral_normalization:
                     prefix += "-sn"
+                prefix += "-" + str(self.pc_code_dim)
                 fname = os.path.join("weights", prefix + ".h5")
                 self.discriminator_single.save_weights(fname)
 
@@ -286,7 +288,7 @@ class PC2Pix():
 
             self.discriminator = multi_gpu_model(self.discriminator_single, gpus=self.gpus)
 	
-        loss = ['binary_crossentropy', 'mse', self.elev_loss, self.azim_loss]
+        loss = ['binary_crossentropy', 'mae', self.elev_loss, self.azim_loss]
         loss_weights = [1., 300., 10., 50.]
         self.discriminator.compile(loss=loss,
                                    loss_weights=loss_weights,
@@ -388,6 +390,8 @@ if __name__ == '__main__':
     parser.add_argument("-c", "--category", default='all', help=help_)
     help_ = "Number of GPUs (default is 1)"
     parser.add_argument("--gpus", type=int, default=1, help=help_)
+    help_ = "PC Stacked kernel size"
+    parser.add_argument("--kernel_size", type=int, default=1, help=help_)
     args = parser.parse_args()
 
     gw = None
@@ -401,6 +405,7 @@ if __name__ == '__main__':
 
     ptcloud_ae = PtCloudStackedAE(latent_dim=args.pc_code_dim,
                                   evaluate=True,
+                                  kernel_size=args.kernel_size,
                                   category=args.category)
     ptcloud_ae.stop_sources()
 
