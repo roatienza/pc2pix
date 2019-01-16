@@ -89,6 +89,15 @@ if __name__ == '__main__':
         mu_pc, sigma_pc = fid.calculate_activation_statistics(pc, sess)
 
     fid_value = fid.calculate_frechet_distance(mu_bl, sigma_bl, mu_gt, sigma_gt)
+    filename = "fid.log"
+    fd = open(filename, "a+")
+    fd.write("---| ")
+    fd.write(args.split_file)
+    fd.write(" |---\n")
     print("Surface FID: %s" % fid_value)
+    fd.write("Surface FID: %s\n" % fid_value)
     fid_value = fid.calculate_frechet_distance(mu_pc, sigma_pc, mu_gt, sigma_gt)
     print("PC2PIX FID: %s" % fid_value)
+    fd.write("PC2PIX FID: %s\n" % fid_value)
+    fd.write("---\n")
+    fd.close()

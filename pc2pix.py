@@ -42,6 +42,7 @@ class PC2Pix():
                  batch_size=64,
                  color=True,
                  gpus=1,
+                 norm=False,
                  category='all'):
 
         self.noise_dim = 128
@@ -72,10 +73,13 @@ class PC2Pix():
             # big color
             # items = ['im', 'pc', 'elev', 'azim']
         # items = ['gray', 'pc', 'view']
-        #if category == 'all':
-        #    path = 'all_exp_norm.json'
-        #else:
-        path = category + '_exp.json'
+        if category == 'all':
+            if norm:
+                path = 'all_exp_norm.json'
+            else:
+                path = category + '_exp.json'
+        else:
+            path = category + '_exp.json'
         self.split_file = os.path.join('data', path)
 
         self.train_source = DataSource(batch_size=self.batch_size, items=items, split_file=self.split_file)
@@ -382,6 +386,8 @@ if __name__ == '__main__':
     parser.add_argument("-t", "--train", default=False, action='store_true', help=help_)
     help_ = "Use grayscale images 224x224pix"
     parser.add_argument("--gray", default=False, action='store_true', help=help_)
+    help_ = "Normalized json"
+    parser.add_argument("--norm", default=False, action='store_true', help=help_)
     help_ = "Point cloud code dim"
     parser.add_argument("-p", "--pc_code_dim", type=int, default=32, help=help_)
     help_ = "Batch size"
@@ -423,6 +429,7 @@ if __name__ == '__main__':
                     pc_code_dim=args.pc_code_dim,
                     category=args.category,
                     color=(not args.gray),
+                    norm=args.norm,
                     gpus=args.gpus)
     if args.train:
         pc2pix.train_gan()
