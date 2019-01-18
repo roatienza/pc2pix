@@ -154,7 +154,7 @@ def plot_3d_point_cloud(x,
         ax.set_xlim(miv, mav)
         ax.set_ylim(miv, mav)
         ax.set_zlim(miv, mav)
-        plt.tight_layout()
+        #plt.tight_layout()
 
     if not show_axis:
         plt.axis('off')
