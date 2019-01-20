@@ -40,11 +40,11 @@ if __name__ == '__main__':
     js = get_ply(split_file)
     t = 0
     i = 0
-    j = 0
     os.makedirs(PLOTS_PATH, exist_ok=True) 
-    for i in range(220):
+    for i in range(211):
         images = []
         image_paths = []
+        j = np.random.randint(0, 20, 1)[0]
         for key in js.keys():
             data = js[key]
             test = data['test']
