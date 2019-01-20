@@ -71,10 +71,10 @@ class PtCloudStackedAE():
         self.model_dir = "saved_models"
         os.makedirs(self.model_dir, exist_ok=True) 
         self.category = category
-        #if category == 'all':
-        #    path = 'all_exp_norm.json'
-        #else:
-        path = category + '_exp.json'
+        if category == 'all':
+            path = 'all_exp_norm.json'
+        else:
+            path = category + '_exp.json'
         split_file = os.path.join('data', path)
         print("Using train split file: ", split_file)
 
