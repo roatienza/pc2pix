@@ -1,4 +1,5 @@
 pc2pix code implementation in Keras(2.2.3) and Tensorflow (1.11)
+surface reconstruction requires blender and meshlab (meshlab server)
 
 Environment tested: Ubunutu Linux 16.04LTS, GPUs tested: 1060, 1080Ti and V100
 
@@ -42,7 +43,7 @@ $ python3 get_class_confidence.py
 
 
 Compile CUDA code for Chamfer Distance and EMD. 
-Note: Needed only if point cloud autoencoder will be trained.
+Note: Needed only if point cloud autoencoder will be trained. Compiling is tricky since it may require changes on the makefile to setup tensorflow and cuda lib/header paths.
 cd external/tf_ops/emd
 make
 cd ../../..

@@ -1,6 +1,6 @@
 '''Point cloud stacked autoencoder.
 
-To run evaluation of autoencoder:
+To run evaluation of autoencoder (all classes):
     python3 ptcloud_stacked_ae.py --weights=model_weights/ptcloud/all-pt-cloud-stacked-ae-emd-5-ae-weights-512.h5 -l=512 -e -k=5
 
 On chair category:
