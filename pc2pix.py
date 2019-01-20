@@ -1,7 +1,14 @@
 '''pc2pix: A conditional generative model for rendering point clouds
 
 Training:
-    python3 pc2pix.py --ptcloud_ae_weights=model_weights/ptcloud/all-pt-cloud-stacked-ae-emd-5-ae-weights-512.h5 -t -p=512 --generator=model_weights/pc2pix/all-gen-color.h5 --discriminator=model_weights/pc2pix/all-dis-color.h5
+
+From scratch (chair dataset):
+    python3 pc2pix.py --ptcloud_ae_weights=model_weights/ptcloud/chair-pt-cloud-stacked-ae-chamfer-5-ae-weights-32.h5 -t -p=32 --generator=model_weights/pc2pix/all-gen-color.h5 --kernel_size=5
+
+With pre-trained weights (chair dataset):
+    python3 pc2pix.py --ptcloud_ae_weights=model_weights/ptcloud/chair-pt-cloud-stacked-ae-chamfer-5-ae-weights-32.h5 -t -p=32 --generator=model_weights/pc2pix/chair-gen-color.h5 --discriminator=model_weights/pc2pix/chair-dis-color.h5 --kernel_size=5
+
+All classes. Change "chair" to "all", 32 to 512. Add --norm
 
 '''
 
@@ -66,13 +73,11 @@ class PC2Pix():
         if color:
             # color images 128x128 rgb
             items = ['im_128', 'pc', 'elev', 'azim']
+            # if big color (224 x 224) rgb
+            # items = ['im', 'pc', 'elev', 'azim']
         else:
             # graycale images 224x224
-            items = ['gray_128', 'pc', 'elev', 'azim']
-
-            # big color
-            # items = ['im', 'pc', 'elev', 'azim']
-        # items = ['gray', 'pc', 'view']
+            items = ['gray', 'pc', 'elev', 'azim']
         if category == 'all':
             if norm:
                 path = 'all_exp_norm.json'
@@ -293,7 +298,7 @@ class PC2Pix():
             self.discriminator = multi_gpu_model(self.discriminator_single, gpus=self.gpus)
 	
         loss = ['binary_crossentropy', 'mae', self.elev_loss, self.azim_loss]
-        loss_weights = [1., 300., 10., 50.]
+        loss_weights = [1., 10., 10., 10.]
         self.discriminator.compile(loss=loss,
                                    loss_weights=loss_weights,
                                    optimizer=optimizer)
@@ -397,7 +402,7 @@ if __name__ == '__main__':
     help_ = "Number of GPUs (default is 1)"
     parser.add_argument("--gpus", type=int, default=1, help=help_)
     help_ = "PC Stacked kernel size"
-    parser.add_argument("--kernel_size", type=int, default=1, help=help_)
+    parser.add_argument("--kernel_size", type=int, default=5, help=help_)
     args = parser.parse_args()
 
     gw = None

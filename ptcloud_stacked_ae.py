@@ -1,6 +1,6 @@
 '''Point cloud stacked autoencoder.
 
-To run evaluation of autoencoder:
+To run evaluation of autoencoder (all classes):
     python3 ptcloud_stacked_ae.py --weights=model_weights/ptcloud/all-pt-cloud-stacked-ae-emd-5-ae-weights-512.h5 -l=512 -e -k=5
 
 On chair category:
@@ -71,10 +71,10 @@ class PtCloudStackedAE():
         self.model_dir = "saved_models"
         os.makedirs(self.model_dir, exist_ok=True) 
         self.category = category
-        #if category == 'all':
-        #    path = 'all_exp_norm.json'
-        #else:
-        path = category + '_exp.json'
+        if category == 'all':
+            path = 'all_exp_norm.json'
+        else:
+            path = category + '_exp.json'
         split_file = os.path.join('data', path)
         print("Using train split file: ", split_file)
 
