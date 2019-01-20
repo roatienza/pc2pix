@@ -1,5 +1,8 @@
 '''Render point clouds from test dataset using pc2pix
 
+python3 interpolate_pc_codes.py --ptcloud_ae_weights=../model_weights/ptcloud/chair-pt-cloud-stacked-ae-chamfer-5-ae-weights-32.h5 -p=32 -k=5 --generator=../model_weights/pc2pix/chair-gen-color.h5 --discriminator=../model_weights/pc2pix/chair-dis-color.h5 
+
+
 '''
 
 from __future__ import absolute_import
@@ -33,6 +36,8 @@ from utils import get_ply, plot_images
 
 
 def render_by_pc2pix(pc_code, pc2pix, elev=10., azim=240.):
+    elev += 40.
+    azim += 180.
     elev_code = np.array([elev / 80.])
     azim_code = np.array([azim / 360.])
     noise = np.random.uniform(-1.0, 1.0, size=[1, 128])
@@ -87,6 +92,7 @@ if __name__ == '__main__':
                                   category=category,
                                   evaluate=True)
     ptcloud_ae.stop_sources()
+    exit(0)
 
     if args.ptcloud_ae_weights:
         print("Loading point cloud ae weights: ", args.ptcloud_ae_weights)
@@ -104,7 +110,7 @@ if __name__ == '__main__':
     start_time = datetime.datetime.now()
     os.makedirs(PLOTS_PATH, exist_ok=True)
     t = 0
-    interpolate = True
+    interpolate = False
     for key in js.keys():
         # key eg 03001627
         data = js[key]
@@ -227,7 +233,7 @@ if __name__ == '__main__':
             for pc_code in pc_codes:
                 # default of plot_3d_point_cloud is azim=240 which is -120
                 # or 60 = 180 - 120
-                image = render_by_pc2pix(pc_code, pc2pix, azim=(320-360+180))
+                image = render_by_pc2pix(pc_code, pc2pix, azim=(320-360))
                 images.append(image)
 
             print(len(images))
