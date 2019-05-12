@@ -1,6 +1,21 @@
 # pc2pix
 A Conditional Generative Adversarial Network for Rendering Point Clouds
 
+## Network architecture
+![Network](media/pc2pix.png)
+
+## Single class (chair) rendering
+![Chair render](media/row_of_chairs.png)
+
+## Multi-class rendering
+![All render](media/all_renders_row.png)
+
+## Latent interpolation
+![Latent interpolation](media/pc_interpolate.png)
+
+## Latent code arithmetic
+![Latent arithmetic](media/pc_arithmetic.png)
+
 `pc2pix` code implementation in Keras(2.2.3) and Tensorflow (1.11)
 Surface reconstruction requires Blender and Meshlab (meshlab server)
 
@@ -62,8 +77,7 @@ Download model weights from https://goo.gl/3vMuxY or https://bit.ly/2CzFAae
 7) To get class similarity:
 
 `$ python3 get_class_confidence.py`
-
-$ cd ..
+`$ cd ..`
 
 ## Citation
 If you find this work useful, please cite:
