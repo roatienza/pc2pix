@@ -1,5 +1,9 @@
 # pc2pix
-A Conditional Generative Adversarial Network for Rendering Point Clouds
+**A Conditional Generative Adversarial Network for Rendering Point Clouds** to be presented at [2019 CVPR Workshop](https://sites.google.com/view/3d-widget/home?authuser=0).
+
+`pc2pix` code implementation in Keras(2.2.3) and Tensorflow (1.11). Surface reconstruction requires Blender and Meshlab.
+
+Environment tested: Ubunutu Linux 16.04LTS, GPUs tested: 1060, 1080Ti and V100
 
 ## Network architecture
 ![Network](media/pc2pix.png)
@@ -14,13 +18,10 @@ A Conditional Generative Adversarial Network for Rendering Point Clouds
 ![Latent interpolation](media/pc_interpolate.png)
 
 ## Latent code arithmetic
-![Latent arithmetic](media/pc_arithmetic.png)
+<img src="media/pc_arithmetic.png" width="390" height="390">
 
-`pc2pix` code implementation in Keras(2.2.3) and Tensorflow (1.11)
-Surface reconstruction requires Blender and Meshlab (meshlab server)
 
-Environment tested: Ubunutu Linux 16.04LTS, GPUs tested: 1060, 1080Ti and V100
-
+## Dataset
 - Datasets (ShapeNet point cloud and rendered images) can be downloaded here (1G + 28G):
 
 `$ cd data`
@@ -34,7 +35,7 @@ Environment tested: Ubunutu Linux 16.04LTS, GPUs tested: 1060, 1080Ti and V100
 `$ tar xzvf shapenet_release.tgz`
 `$ cd ..`
 
-
+## Testing 
 Pre-compiled latent codes (to speed up point cloud encoder prediction)
 Note: Needed only if pc2pix will be trained
 
