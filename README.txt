@@ -66,3 +66,9 @@ Alternate CD and EMD lib
 $ cd external/structural_losses
 $ make
 $ cd ../../
+
+Training:
+1) To train pc2pix from scratch:
+python3 pc2pix.py -t --category="chair" --ptcloud_ae_weights=model_weights/ptcloud/chair-pt-cloud-stacked-ae-chamfer-5-ae-weights-32.h5
+
+
