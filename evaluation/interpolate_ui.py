@@ -1,7 +1,9 @@
 '''Render point clouds from test dataset using pc2pix
 
+python3 interpolate_ui.py 
 
-python3 interpolate_diff_objs.py --ptcloud_ae_weights=../model_weights/ptcloud/all-pt-cloud-stacked-ae-emd-5-ae-weights-512.h5 -p=512 -k=5 --generator=../model_weights/pc2pix/all-gen-color.h5 --discriminator=../model_weights/pc2pix/all-dis-color.h5  --category="all" --split_file=data/all_exp.json
+python3 interpolate_ui.py --ptcloud_ae_weights=../model_weights/ptcloud/chair-pt-cloud-stacked-ae-chamfer-5-ae-weights-32.h5 -k=5 --generator=../model_weights/pc2pix/chair-gen-color.h5 --discriminator=../model_weights/pc2pix/chair-dis-color.h5  --category="chair" --split_file=data/chair_exp.json -p=32
+
 
 '''
 
@@ -37,7 +39,7 @@ from utils import get_ply, plot_images
 from tkinter import *
 from tkinter import ttk
 from PIL import Image, ImageTk
-
+import time
 
 
 class Window(Frame):
@@ -135,10 +137,12 @@ class Window(Frame):
     def init_pc2pix(self):
         # datasets = ('test')
         os.makedirs(PLOTS_PATH, exist_ok=True)
-        # sofa2car
-        keys = [ "04256520", "02958343"]
-        # keys = [ "03001627", "04379243", "04256520"  ]
-        # key eg 03001627
+        # sofa2car - modify these 2 keys manually
+        #keys = [ "04256520", "02958343"]
+        # sofa2chair 
+        keys = [ "04256520", "03001627"]
+        # chair2chair
+        # keys = [ "03001627", "03001627"]
         tags = []
         data = js[keys[0]]
         tag = data['test']
@@ -156,6 +160,7 @@ class Window(Frame):
         self.tags = []
         self.pc_codes = []
 
+        np.random.seed(int(time.time()))
         for i in range(2):
             j = np.random.randint(0, tagslen, 1)[0]
             tag = tags[i][j]
@@ -267,7 +272,7 @@ if __name__ == '__main__':
                                   kernel_size=args.kernel_size,
                                   category=category,
                                   evaluate=True)
-    ptcloud_ae.stop_sources()
+    # ptcloud_ae.stop_sources()
 
     if args.ptcloud_ae_weights:
         print("Loading point cloud ae weights: ", args.ptcloud_ae_weights)
@@ -290,154 +295,4 @@ if __name__ == '__main__':
     root.geometry("768x532")
     app = Window(root, ptcloud_ae=ptcloud_ae, pc2pix=pc2pix, js=js, ply=args.ply)
     root.mainloop()
-
-    exit(0)
-
-    datasets = ('test')
-    start_time = datetime.datetime.now()
-    os.makedirs(PLOTS_PATH, exist_ok=True)
-    t = 0
-    interpolate = True
-    # sofa2car
-    # keys = [ "04256520", "02958343"]
-    keys = [ "03001627", "04379243", "04256520"  ]
-    # key eg 03001627
-    data = js[keys[0]]
-    tags1 = data['test']
-    data = js[keys[1]]
-    tags2 = data['test']
-    data = js[keys[2]]
-    tags3 = data['test']
-    ply_path_main1 = os.path.join(args.ply, keys[0])
-    ply_path_main2 = os.path.join(args.ply, keys[1])
-    ply_path_main3 = os.path.join(args.ply, keys[2])
-    tagslen = min(len(tags1), len(tags2))
-    tagslen = min(tagslen, len(tags3))
-    n_interpolate = 10
-    if not interpolate:
-        n_interpolate = 2
-    for _ in range(tagslen):
-        n = 0
-        i = np.random.randint(0, tagslen, 1)[0]
-        tag = tags1[i]
-        images = []
-        pc_codes = []
-        ply_file = os.path.join(ply_path_main1, tag + ".ply")
-        pc = load_ply(ply_file)
-        target_path = os.path.join(PLOTS_PATH, tag + "_" + str(n) + ".png")
-        n += 1
-        fig = plot_3d_point_cloud(pc[:, 0],
-                                  pc[:, 1],
-                                  pc[:, 2],
-                                  show=False,
-                                  azim=320,
-                                  colorize='rainbow',
-                                  filename=target_path)
-        image = np.array(Image.open(target_path)) / 255.0
-        images.append(image)
-        pc = norm_pc(pc)
-        shape = pc.shape
-        pc = np.reshape(pc, [-1, shape[0], shape[1]])
-        pc_code1 = ptcloud_ae.encoder.predict(pc)
-        pc_codes.append(pc_code1)
-
-        i = np.random.randint(0, tagslen, 1)[0]
-        tag = tags2[i]
-        ply_file = os.path.join(ply_path_main2, tag + ".ply")
-        pc = load_ply(ply_file)
-        target_path = os.path.join(PLOTS_PATH, tag + "_" + str(n_interpolate + 1) + ".png")
-        fig = plot_3d_point_cloud(pc[:, 0],
-                                  pc[:, 1],
-                                  pc[:, 2],
-                                  azim=320,
-                                  show=False,
-                                  colorize='rainbow',
-                                  filename=target_path)
-
-        image_end = np.array(Image.open(target_path)) / 255.0
-        pc = norm_pc(pc)
-        shape = pc.shape
-        pc = np.reshape(pc, [-1, shape[0], shape[1]])
-        pc_code2 = ptcloud_ae.encoder.predict(pc)
-
-        shape = pc_code1.shape
-        if interpolate:
-            for i in range(n_interpolate):
-                #pc_code = []
-                delta = (pc_code2 - pc_code1)/(n_interpolate + 1)
-                delta *= (i + 1)
-                pc_code = pc_code1 + delta
-                pc_codes.append(pc_code)
-
-                pc = ptcloud_ae.decoder.predict(pc_code)
-                pc *= 0.5
-                target_path = os.path.join(PLOTS_PATH, tag + "_" + str(n) + ".png")
-                n += 1
-                fig = plot_3d_point_cloud(pc[0][:, 0],
-                                          pc[0][:, 1],
-                                          pc[0][:, 2],
-                                          show=False,
-                                          azim=320,
-                                          colorize='rainbow',
-                                          filename=target_path)
-                image = np.array(Image.open(target_path)) / 255.0
-                images.append(image)
-
-            images.append(image_end)
-            pc_codes.append(pc_code2)
-        else:
-            i = np.random.randint(0, tagslen, 1)[0]
-            tag = tags3[i]
-            ply_file = os.path.join(ply_path_main3, tag + ".ply")
-            pc = load_ply(ply_file)
-            target_path = os.path.join(PLOTS_PATH, tag + "_" + str(1) + ".png")
-            fig = plot_3d_point_cloud(pc[:, 0],
-                                      pc[:, 1],
-                                      pc[:, 2],
-                                      show=False,
-                                      azim=320,
-                                      colorize='rainbow',
-                                      filename=target_path)
-
-            image = np.array(Image.open(target_path)) / 255.0
-            images.append(image)
-            pc = norm_pc(pc)
-            shape = pc.shape
-            pc = np.reshape(pc, [-1, shape[0], shape[1]])
-            pc_code = ptcloud_ae.encoder.predict(pc)
-            pc_codes.append(pc_code)
-
-
-            images.append(image_end)
-            pc_codes.append(pc_code2)
-
-            pc_code = pc_code1 - pc_code + pc_code2
-            pc_codes.append(pc_code)
-            pc = ptcloud_ae.decoder.predict(pc_code)
-            pc *= 0.5
-            target_path = os.path.join(PLOTS_PATH, tag + "_" + str(3) + ".png")
-            n += 1
-            fig = plot_3d_point_cloud(pc[0][:, 0],
-                                      pc[0][:, 1],
-                                      pc[0][:, 2],
-                                      show=False,
-                                      azim=320,
-                                      colorize='rainbow',
-                                      filename=target_path)
-            image = np.array(Image.open(target_path)) / 255.0
-            images.append(image)
-
-        for pc_code in pc_codes:
-            # default of plot_3d_point_cloud is azim=240 which is -120
-            # or 60 = 180 - 120
-            image = render_by_pc2pix(pc_code, pc2pix, azim=-40)
-            images.append(image)
-
-        print(len(images))
-        plot_images(2, n_interpolate + 2, images, tag + ".png", dir_name="point_clouds")
-        t += 1
-        if t > 2:
-            del pc2pix
-            del ptcloud_ae
-            exit(0)
-        #exit(0)
+    ptcloud_ae.stop_sources()
