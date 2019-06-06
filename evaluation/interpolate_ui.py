@@ -1,4 +1,4 @@
-'''Render point clouds from test dataset using pc2pix
+'''Demo test to show interpolation between pt clouds
 
 python3 interpolate_ui.py 
 
@@ -292,7 +292,7 @@ if __name__ == '__main__':
     js = get_ply(args.split_file)
 
     root = Tk()
-    root.geometry("768x532")
+    root.geometry("768x550")
     app = Window(root, ptcloud_ae=ptcloud_ae, pc2pix=pc2pix, js=js, ply=args.ply)
     root.mainloop()
     ptcloud_ae.stop_sources()
