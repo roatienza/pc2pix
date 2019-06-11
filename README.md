@@ -5,6 +5,12 @@
 
 Environment tested: Ubunutu Linux 16.04LTS, GPUs tested: 1060, 1080Ti and V100
 
+## Demo
+
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=qrkHhar_ynk
+" target="_blank"><img src="http://img.youtube.com/vi/qrkHhar_ynk/0.jpg" 
+alt="pc2pix" width="640" height="360" border="10" /></a>
+
 ## Network architecture
 ![Network](media/pc2pix.png)
 
