@@ -22,6 +22,7 @@ alt="pc2pix" width="640" height="360" border="10" /></a>
 
 ## Latent interpolation
 ![Latent interpolation](media/pc_interpolate.png)
+![Sofa to Chair](media/sofa2chair.gif)
 
 ## Latent code arithmetic
 <img src="media/pc_arithmetic.png" width="390" height="390">
