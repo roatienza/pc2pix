@@ -1,5 +1,5 @@
 # pc2pix
-**A Conditional Generative Adversarial Network for Rendering Point Clouds** to be presented at [2019 CVPR Workshop](https://sites.google.com/view/3d-widget/home?authuser=0).
+**[A Conditional Generative Adversarial Network for Rendering Point Clouds](http://openaccess.thecvf.com/content_CVPRW_2019/papers/3D-WidDGET/Atienza_A_Conditional_Generative_Adversarial_Network_for_Rendering_Point_Clouds_CVPRW_2019_paper.pdf)** to be presented at [2019 CVPR Workshop](https://sites.google.com/view/3d-widget/home?authuser=0).
 
 `pc2pix` code implementation in Keras(2.2.3) and Tensorflow (1.11). Surface reconstruction requires Blender and Meshlab.
 
@@ -90,10 +90,10 @@ Download model weights from https://goo.gl/3vMuxY or https://bit.ly/2CzFAae
 If you find this work useful, please cite:
 
 ```
-@inproceedings{atienza2019cvprwpc2pix,
-  title={A Conditional Generative Adversarial Network for Rendering Point Clouds},
-  author={Atienza, Rowel},
-  booktitle={Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition Workshops},
-  pages={0--0},
-  year={2019}
+@InProceedings{Atienza_2019_CVPR_Workshops,
+author = {Atienza, Rowel},
+title = {A Conditional Generative Adversarial Network for Rendering Point Clouds},
+booktitle = {The IEEE Conference on Computer Vision and Pattern Recognition (CVPR) Workshops},
+month = {June},
+year = {2019}
 }
